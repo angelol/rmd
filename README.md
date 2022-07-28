@@ -19,6 +19,6 @@ rmd dir_to_delete
  You need to have the [rust language](https://www.rust-lang.org/) compiler, rustc installed, then: 
  ```
  cargo build --release
- sudo cp ./target/release/builder /usr/local/bin/
+ sudo cp ./target/release/rmd /usr/local/bin/
  ```
  
