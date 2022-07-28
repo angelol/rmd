@@ -18,8 +18,7 @@ rmd dir_to_delete
  ## Installation
  You need to have the [rust language](https://www.rust-lang.org/) compiler, rustc installed, then: 
  ```
- make
- sudo make install
+ cargo build --release
+ sudo cp ./target/release/builder /usr/local/bin/
  ```
- This will copy the `rmd` binary to `/usr/local/bin/`. 
  
