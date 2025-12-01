@@ -1,6 +1,6 @@
-# rmd
+# srmd
 
-Safety‑first command line utility to delete a **single directory**. `rmd` is a deliberately limited, safer alternative to `rm -rf` when you only want to remove one subdirectory of your current working directory.
+Safety‑first command line utility to delete a **single directory**. `srmd` is a deliberately limited, safer alternative to `rm -rf` when you only want to remove one subdirectory of your current working directory.
 
 ## Why?
 
@@ -16,11 +16,11 @@ With tab completion, shells often add a trailing slash. One stray space turns th
 rm -rf music /
 ```
 
-Now `/` is also an argument, and you are recursively deleting the root filesystem. `rmd` exists to _not_ let you do that kind of thing.
+Now `/` is also an argument, and you are recursively deleting the root filesystem. `srmd` exists to _not_ let you do that kind of thing.
 
 ## Safety guarantees
 
-`rmd` intentionally has a very small, strict behavior surface:
+`srmd` intentionally has a very small, strict behavior surface:
 
 - Only **direct subdirectories** of the current working directory can be deleted.
 - It **never** traverses to the parent directory and will not delete the current directory itself.
@@ -28,14 +28,14 @@ Now `/` is also an argument, and you are recursively deleting the root filesyste
 - It always asks for confirmation and only proceeds on explicit `y` / `Y` (default is **no**).
 - Paths are resolved using `canonicalize`, so it behaves safely even when symlinks are involved.
 
-If any of these conditions are not met, `rmd` fails with an error instead of guessing what you meant.
+If any of these conditions are not met, `srmd` fails with an error instead of guessing what you meant.
 
 ## Usage
 
 Basic usage:
 
 ```bash
-rmd path/to/subdir
+srmd path/to/subdir
 ```
 
 Examples:
@@ -47,7 +47,7 @@ $ pwd
 $ ls
 music  notes  tmp
 
-$ rmd music
+$ srmd music
 delete /home/user/projects/music? [y/N] y
 # directory removed
 ```
@@ -56,15 +56,15 @@ Attempts that will **not** be allowed:
 
 ```bash
 # Not a direct subdirectory (too high up)
-$ rmd /home/user
+$ srmd /home/user
 Error: This is not a subdirectory
 
 # Same directory as CWD
-$ rmd .
+$ srmd .
 Error: Not a directory   # or another InvalidInput error, depending on your shell expansion
 
 # Deeper nested path (not a direct child)
-$ rmd music/old
+$ srmd music/old
 Error: This is not a subdirectory
 ```
 
@@ -76,13 +76,13 @@ You need the [Rust](https://www.rust-lang.org/) toolchain installed (`cargo`, `r
 
 ```bash
 cargo build --release
-sudo cp ./target/release/rmd /usr/local/bin/
+sudo cp ./target/release/srmd /usr/local/bin/
 ```
 
-Now `rmd` should be available in your `PATH`:
+Now `srmd` should be available in your `PATH`:
 
 ```bash
-rmd --help  # once CLI flags are added
+srmd --help  # once CLI flags are added
 ```
 
 ## Contributing
@@ -100,4 +100,4 @@ Before opening a PR, please:
 
 ## License
 
-`rmd` is licensed under the MIT License. See the `LICENSE` file for details.
+`srmd` is licensed under the MIT License. See the `LICENSE` file for details.

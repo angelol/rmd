@@ -1,5 +1,5 @@
 [package]
-name = "rmd"
+name = "srmd"
 version = "0.1.0"
 authors = ["Angelo Laub <angelolaub@gmail.com>"]
 edition = "2021"
