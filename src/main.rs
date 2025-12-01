@@ -9,9 +9,9 @@ fn main() -> std::io::Result<()> {
     ensure_is_dir(&to_delete)?;
     let current_dir = env::current_dir()?;
     ensure_is_subdirectory(&current_dir, &to_delete)?;
-    let message = format!("delete {}? Y/n", to_delete.display());
+    let message = format!("delete {}? [y/N]", to_delete.display());
     let answer = input(&message);
-    if answer == "Y" {
+    if answer.eq_ignore_ascii_case("y") {
         fs::remove_dir_all(to_delete)?;
     }
     Ok(())
@@ -49,19 +49,59 @@ fn ensure_is_subdirectory(parent: &Path, child: &Path) -> std::io::Result<()> {
             return not_a_subdir;
         }
     }
-    // child must be one level below parent, so iter must not yet be None
-    if cc.next().is_none() {
-        not_a_subdir
-    } else {
-        Ok(())
+    // child must be exactly one level below parent: it needs exactly one more path component
+    match (cc.next(), cc.next()) {
+        (Some(_), None) => Ok(()),
+        _ => not_a_subdir,
     }
 }
 
-fn input(message: &String) -> String {
+fn input(message: &str) -> String {
     println!("{}", message);
     let mut ret = String::new();
     stdin()
         .read_line(&mut ret)
         .expect("Failed to read from stdin");
     ret.trim().to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::ensure_is_subdirectory;
+    use std::path::Path;
+
+    #[test]
+    fn direct_subdirectory_is_ok() {
+        let parent = Path::new("/a/b");
+        let child = Path::new("/a/b/c");
+        assert!(ensure_is_subdirectory(parent, child).is_ok());
+    }
+
+    #[test]
+    fn same_directory_is_not_subdirectory() {
+        let parent = Path::new("/a/b");
+        let child = Path::new("/a/b");
+        assert!(ensure_is_subdirectory(parent, child).is_err());
+    }
+
+    #[test]
+    fn parent_directory_is_not_subdirectory() {
+        let parent = Path::new("/a/b");
+        let child = Path::new("/a");
+        assert!(ensure_is_subdirectory(parent, child).is_err());
+    }
+
+    #[test]
+    fn unrelated_directory_is_not_subdirectory() {
+        let parent = Path::new("/a/b");
+        let child = Path::new("/x/y");
+        assert!(ensure_is_subdirectory(parent, child).is_err());
+    }
+
+    #[test]
+    fn deeper_nested_directory_is_not_direct_subdirectory() {
+        let parent = Path::new("/a/b");
+        let child = Path::new("/a/b/c/d");
+        assert!(ensure_is_subdirectory(parent, child).is_err());
+    }
 }
