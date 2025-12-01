@@ -85,6 +85,33 @@ Now `srmd` should be available in your `PATH`:
 srmd --help  # once CLI flags are added
 ```
 
+## Testing & coverage
+
+This repository includes both unit tests and CLI integration tests.
+
+- **Run all tests**:
+
+  ```bash
+  cargo test
+  # or
+  make test
+  ```
+
+- **Coverage (requires `cargo-llvm-cov` and `llvm-tools-preview`)**:
+
+  ```bash
+  # one-time setup (installs llvm-tools and cargo-llvm-cov where possible)
+  make setup
+
+  # show coverage summary in the terminal
+  make coverage
+
+  # generate and open an HTML coverage report (macOS)
+  make coverage-html
+  ```
+
+The tests are intended to keep coverage high (around 90–95%+) across the core logic and CLI behavior, especially around safety checks and error paths.
+
 ## Contributing
 
 Issues and pull requests are welcome. Some possible areas to help with:
